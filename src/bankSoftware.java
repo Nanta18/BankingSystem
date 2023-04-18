@@ -1,5 +1,7 @@
 import java.util.*;
 import java.io.*;
+import javax.swing.*;
+import java.awt.*;
 
 public class bankSoftware {
     /*
@@ -12,8 +14,44 @@ public class bankSoftware {
     public static HashMap<String, Double> accountDetails = new HashMap<>();
 
     public static void main(String[] args) {
+        applicationWindow();
         readFile();
         userPrompt();
+        
+    }
+
+    public static void applicationWindow() {
+        try{
+            JFrame JFWindow = new JFrame();
+
+
+    JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    JTextArea tekstialue = new JTextArea();
+    tekstialue.setEditable(false);
+
+    JScrollPane rullausJutu = new JScrollPane(tekstialue);
+    JFWindow.getContentPane().add(rullausJutu);
+
+    JFWindow.setSize(400, 400);
+    JFWindow.setVisible(true);
+    JFWindow.setTitle("Turku Wallstreet Bank");
+
+
+        /* 
+        TextField JFtextField = new TextField();
+        JButton JFButton = new JButton("Test button");
+        ImageIcon JFLogo = new ImageIcon();
+        JLabel JFLogoLabel = new JLabel("logo");
+       
+
+        JFtextField.setPreferredSize(new Dimension(200, 30));
+        JFButton.setPreferredSize(new Dimension(100, 30));
+        JFLogoLabel.setPreferredSize(new Dimension(100, 100));
+        */
+        } finally {
+            
+        }
     }
 
     public static void userPrompt() {
@@ -59,7 +97,7 @@ public class bankSoftware {
             if (!(name.equals(""))) {
                 bdWriter.append(name + "," + initialBalance + "\r\n");
                 bdWriter.close();
-                System.out.println("user" + name + "added");
+                System.out.println("User " + name + " added");
             } else {
                 System.out.println("jotain meni pieleen");
             }
