@@ -14,43 +14,43 @@ public class bankSoftware {
     public static HashMap<String, Double> accountDetails = new HashMap<>();
 
     public static void main(String[] args) {
+        populateHashMap();
+        System.out.println(accountDetails);
         applicationWindow();
         readFile();
         userPrompt();
-        
+
     }
 
     public static void applicationWindow() {
-        try{
+        try {
             JFrame JFWindow = new JFrame();
 
+            JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            JTextArea tekstialue = new JTextArea();
+            tekstialue.setEditable(false);
 
-    JTextArea tekstialue = new JTextArea();
-    tekstialue.setEditable(false);
+            JScrollPane rullausJutu = new JScrollPane(tekstialue);
+            JFWindow.getContentPane().add(rullausJutu);
 
-    JScrollPane rullausJutu = new JScrollPane(tekstialue);
-    JFWindow.getContentPane().add(rullausJutu);
+            JFWindow.setSize(400, 400);
+            JFWindow.setVisible(true);
+            JFWindow.setTitle("Turku Wallstreet Bank");
 
-    JFWindow.setSize(400, 400);
-    JFWindow.setVisible(true);
-    JFWindow.setTitle("Turku Wallstreet Bank");
-
-
-        /* 
-        TextField JFtextField = new TextField();
-        JButton JFButton = new JButton("Test button");
-        ImageIcon JFLogo = new ImageIcon();
-        JLabel JFLogoLabel = new JLabel("logo");
-       
-
-        JFtextField.setPreferredSize(new Dimension(200, 30));
-        JFButton.setPreferredSize(new Dimension(100, 30));
-        JFLogoLabel.setPreferredSize(new Dimension(100, 100));
-        */
+            /*
+             * TextField JFtextField = new TextField();
+             * JButton JFButton = new JButton("Test button");
+             * ImageIcon JFLogo = new ImageIcon();
+             * JLabel JFLogoLabel = new JLabel("logo");
+             * 
+             * 
+             * JFtextField.setPreferredSize(new Dimension(200, 30));
+             * JFButton.setPreferredSize(new Dimension(100, 30));
+             * JFLogoLabel.setPreferredSize(new Dimension(100, 100));
+             */
         } finally {
-            
+
         }
     }
 
@@ -82,6 +82,25 @@ public class bankSoftware {
         }
     }
 
+    public static void populateHashMap() {
+        try {
+            File bankDetails = new File(fileName);
+            Scanner scIN = new Scanner(bankDetails);
+            int linesCheck = 0;
+
+            while (scIN.hasNextLine()) {
+                String[] temp = scIN.nextLine().split(",");
+                accountDetails.put(temp[0], Double.parseDouble(temp[1]));
+                linesCheck++;
+            }
+            System.out.println("Hashmap populated with " + linesCheck + "entries.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("left populateHashMap()");
+        }
+    }
+
     public static void addUser() {
         try {
             File bankDetails = new File(fileName);
@@ -110,12 +129,34 @@ public class bankSoftware {
     public static void addMoney() {
         try {
             File bankDetails = new File(fileName);
+            Scanner scIN = new Scanner(System.in);
+            FileWriter fWriter = new FileWriter(bankDetails, false);
+
+            /* debug testi miltä hashmap näyttää metodin alussa. */
+            System.out.println(accountDetails);
+
             if (bankDetails.createNewFile()) {
                 System.out.println("File created: " + bankDetails.getName() + "at" + bankDetails.getAbsolutePath());
             } else {
                 System.out.println("File already exists at: " + bankDetails.getAbsolutePath());
             }
 
+            /* otetaan käyttäjän syötteet ja päivitetään hashmap */
+            System.out.println("how much money to add?");
+            Double amount = scIN.nextDouble();
+            System.out.println("to what account should the money be added?");
+            String accountName = scIN.next();
+
+            accountDetails.replace(accountName, (accountDetails.get(accountName) + amount));
+
+            /* Write updated contents back to file */
+            for (String name : accountDetails.keySet()) {
+                fWriter.write(name + "," + accountDetails.get(name) + "\n");
+            }
+            fWriter.close();
+
+            /* debug testi miltä hashmap näyttää metodin lopussa. */
+            System.out.println(accountDetails);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -143,6 +184,43 @@ public class bankSoftware {
 
     public static void withdrawMoney() {
         try {
+            File bankDetails = new File(fileName);
+            Scanner scIN = new Scanner(System.in);
+            FileWriter fWriter = new FileWriter(bankDetails, false);
+
+            /* debug testi miltä hashmap näyttää metodin alussa. */
+            System.out.println(accountDetails);
+
+            if (bankDetails.createNewFile()) {
+                System.out.println("File created: " + bankDetails.getName() + "at" + bankDetails.getAbsolutePath());
+            } else {
+                System.out.println("File already exists at: " + bankDetails.getAbsolutePath());
+            }
+
+            /* otetaan käyttäjän syötteet ja päivitetään hashmap */
+            System.out.println("how much money to withdraw?");
+            Double amount = scIN.nextDouble();
+            System.out.println("from which account do you want to withdraw?");
+            String accountName = scIN.next();
+
+            /*
+             * Käytetään samaa logiikkaa kuin addMoney() metodissa, lisättynä vain tarkistus
+             * että tilillä on enemmän rahaa kuin halutaan nostaa.
+             */
+            if (accountDetails.get(accountName) >= amount) {
+                accountDetails.replace(accountName, (accountDetails.get(accountName) - amount));
+            } else {
+                System.out.println("debug: \tMoney was not withdrawn\n\tAmount or user issue");
+            }
+
+            /* Write updated contents back to file */
+            for (String name : accountDetails.keySet()) {
+                fWriter.write(name + "," + accountDetails.get(name) + "\n");
+            }
+            fWriter.close();
+
+            /* debug testi miltä hashmap näyttää metodin lopussa. */
+            System.out.println(accountDetails);
 
         } catch (Exception e) {
             e.printStackTrace();
