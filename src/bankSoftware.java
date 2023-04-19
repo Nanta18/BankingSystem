@@ -2,6 +2,8 @@ import java.util.*;
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class bankSoftware {
     /*
@@ -41,6 +43,25 @@ public class bankSoftware {
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
                 JFWindow.getContentPane().add(button);
+
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String[] options = { "Option 1", "Option 2", };
+                        JComboBox<String> comboBox = new JComboBox<>(options);
+
+                        JOptionPane.showMessageDialog(JFWindow, comboBox, "Select an option",
+                                JOptionPane.QUESTION_MESSAGE);
+
+                        String selectedOption = (String) comboBox.getSelectedItem();
+
+                        if (selectedOption.equals("Option 1")) {
+                            buttonDebug1();
+                        } else if (selectedOption.equals("Option 2")) {
+                            buttonDebug2();
+                        }
+                    }
+                });
             }
             /*
              * TextField JFtextField = new TextField();
@@ -56,6 +77,15 @@ public class bankSoftware {
         } finally {
 
         }
+    }
+
+    /* debug funktiot nappuloille */
+    public static void buttonDebug1() {
+        System.out.println("1");
+    }
+
+    public static void buttonDebug2() {
+        System.out.println("2");
     }
 
     public static void userPrompt() {
