@@ -128,6 +128,12 @@ public class bankSoftware {
 
     public static void addMoney() {
         try {
+            /*
+             * callataan populate hashmap joka päivittää hashmapin siinä tapauksessa jos
+             * bankdetails tiedosto on ollut tyhjä ohjelmaa runatessa, johtaen siihen että
+             * rahansiirto operaatiot eivät toimi oikein.
+             */
+            populateHashMap();
             File bankDetails = new File(fileName);
             Scanner scIN = new Scanner(System.in);
             FileWriter fWriter = new FileWriter(bankDetails, false);
@@ -184,6 +190,7 @@ public class bankSoftware {
 
     public static void withdrawMoney() {
         try {
+            populateHashMap();
             File bankDetails = new File(fileName);
             Scanner scIN = new Scanner(System.in);
             FileWriter fWriter = new FileWriter(bankDetails, false);
