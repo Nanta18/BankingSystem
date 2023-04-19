@@ -19,12 +19,12 @@ public class bankSoftware {
         applicationWindow();
         readFile();
         userPrompt();
-
     }
 
     public static void applicationWindow() {
         try {
             JFrame JFWindow = new JFrame();
+            JFWindow.setLayout(new FlowLayout());
 
             JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -38,6 +38,10 @@ public class bankSoftware {
             JFWindow.setVisible(true);
             JFWindow.setTitle("Turku Wallstreet Bank");
 
+            for (String key : accountDetails.keySet()) {
+                JButton button = new JButton(key);
+                JFWindow.getContentPane().add(button);
+            }
             /*
              * TextField JFtextField = new TextField();
              * JButton JFButton = new JButton("Test button");
