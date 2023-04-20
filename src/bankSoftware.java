@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 public class bankSoftware {
     /*
@@ -103,8 +104,18 @@ public class bankSoftware {
                         balanceWindow.add(submitButton);
 
                         balanceWindow.setVisible(true);
-                        String selectedOption = (String) comboBox.getSelectedItem();
-                        buttonHandler(selectedOption);
+
+                        /*
+                         * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
+                         * funktiota joka on valittu combobox elementissä.
+                         */
+                        submitButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String selectedOption = (String) comboBox.getSelectedItem();
+                                buttonHandler(selectedOption);
+                            }
+                        });
+
                     }
                 });
             }

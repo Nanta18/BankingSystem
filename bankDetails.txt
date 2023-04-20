@@ -1,5 +1,5 @@
 Abbababa,0.0
 a,10.0
-paskaaaa,0.0
+paskaaaa,20.0
 Perse,0.0
 per,0.0
