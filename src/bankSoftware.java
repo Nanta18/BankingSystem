@@ -366,10 +366,43 @@ public class bankSoftware {
 
     public static void transferMoney() {
         try {
+            populateHashMap();
+            File bankDetails = new File(fileName);
+            Scanner scIN = new Scanner(System.in);
+            FileWriter fWriter = new FileWriter(bankDetails, false);
+
+            System.out.println("Transferring money");
+            System.out.println("possible senders and receivers: " + accountDetails.keySet());
+
+            System.out.println("Give sender:");
+            String sender = scIN.nextLine();
+            System.out.println("Give recipient:");
+            String recipient = scIN.nextLine();
+            System.out.println("how much money do you want to transfer?");
+            Double amount = scIN.nextDouble();
+
+            /*
+             * Tässä tarkistetaan onko käyttäjällä tarpeeksi siirrettävää rahaa ja ovatko
+             * molemmat, lähettäjä ja vastaanottaja valideja.
+             */
+            if (accountDetails.containsKey(sender) && accountDetails.containsKey(recipient)
+                    && (accountDetails.get(sender) > amount)) {
+                accountDetails.replace(sender, accountDetails.get(sender) - amount);
+                accountDetails.replace(recipient, accountDetails.get(recipient) + amount);
+            } else {
+                System.out.println("sender or recipient not found, or sender too poor.");
+            }
+
+            /* Write updated contents back to file */
+            for (String name : accountDetails.keySet()) {
+                fWriter.write(name + "," + accountDetails.get(name) + "\n");
+            }
+            fWriter.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            populateHashMap();
             System.out.println("debug\tout of transferMoney");
         }
     }
