@@ -15,6 +15,9 @@ public class bankSoftware {
     public static final String fileName = "bankDetails.txt";
     public static HashMap<String, Double> accountDetails = new HashMap<>();
 
+    // userPrompt(), addUser(), addMoney(), withdrawMoney(), transferMoney(),
+    // deleteUser()
+
     public static void main(String[] args) {
         populateHashMap();
         System.out.println(accountDetails);
@@ -26,7 +29,7 @@ public class bankSoftware {
     public static void applicationWindow() {
         try {
             JFrame JFWindow = new JFrame();
-            JFWindow.setLayout(new FlowLayout());
+            JFWindow.setLayout(new GridLayout());
 
             JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -42,11 +45,19 @@ public class bankSoftware {
 
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
+                button.setName(key);
                 JFWindow.getContentPane().add(button);
 
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        /*
+                         * debug line mikä napeista valittiin, tätä tietoa voidaan käyttää myöhemmin
+                         * hashmapin päivitykseen
+                         */
+                        String selectedOptionString = (String) button.getName();
+                        System.out.println("user " + selectedOptionString + " clicked");
+
                         String[] options = { "Option 1", "Option 2", };
                         JComboBox<String> comboBox = new JComboBox<>(options);
 
@@ -63,17 +74,6 @@ public class bankSoftware {
                     }
                 });
             }
-            /*
-             * TextField JFtextField = new TextField();
-             * JButton JFButton = new JButton("Test button");
-             * ImageIcon JFLogo = new ImageIcon();
-             * JLabel JFLogoLabel = new JLabel("logo");
-             * 
-             * 
-             * JFtextField.setPreferredSize(new Dimension(200, 30));
-             * JFButton.setPreferredSize(new Dimension(100, 30));
-             * JFLogoLabel.setPreferredSize(new Dimension(100, 100));
-             */
         } finally {
 
         }
@@ -92,23 +92,26 @@ public class bankSoftware {
         try {
             Scanner scIN = new Scanner(System.in);
             String input = "";
-            while (!(input.equals("5"))) {
-                System.out.println("1) - Add money\n" +
-                        "2) - Withdraw money\n" +
-                        "3) - Transfer money\n" +
-                        "4) - Add an user\n" +
-                        "5) - Exit the application\n");
+            while (!(input.equals("6"))) {
+                System.out.println("1) - Add an user\n" +
+                        "2) - Delete an user\n" +
+                        "3) - Add money\n" +
+                        "4) - Withdraw money\n" +
+                        "5) - Transfer money\n" +
+                        "6) - Exit the application\n");
 
                 input = scIN.nextLine();
 
                 if (input.equals("1")) {
-                    addMoney();
-                } else if (input.equals("2")) {
-                    withdrawMoney();
-                } else if (input.equals("3")) {
-                    transferMoney();
-                } else if (input.equals("4")) {
                     addUser();
+                } else if (input.equals("2")) {
+                    deleteUser();
+                } else if (input.equals("3")) {
+                    addMoney();
+                } else if (input.equals("4")) {
+                    withdrawMoney();
+                } else if (input.equals("5")) {
+                    transferMoney();
                 }
             }
         } finally {
@@ -116,6 +119,7 @@ public class bankSoftware {
         }
     }
 
+    /* Callataan joka metodin lopussa pitämään hashmap ajan tasalla. */
     public static void populateHashMap() {
         try {
             File bankDetails = new File(fileName);
@@ -154,6 +158,37 @@ public class bankSoftware {
             } else {
                 System.out.println("jotain meni pieleen");
             }
+            populateHashMap();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteUser() {
+        try {
+            File bankDetails = new File(fileName);
+            FileWriter bdWriter = new FileWriter(bankDetails, false);
+            Scanner scIN = new Scanner(System.in);
+
+            String nameToDelete = "";
+
+            System.out.println("Give the user to be deleted.\noptions:");
+            for (String name : accountDetails.keySet()) {
+                System.out.println(name);
+            }
+            nameToDelete = scIN.nextLine();
+
+            if (accountDetails.containsKey(nameToDelete)) {
+                accountDetails.remove(nameToDelete);
+                System.out.println("user " + nameToDelete + " deleted.");
+            }
+
+            for (String name : accountDetails.keySet()) {
+                bdWriter.write(name + "," + accountDetails.get(name) + "\n");
+            }
+            bdWriter.close();
+            populateHashMap();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,6 +235,7 @@ public class bankSoftware {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            populateHashMap();
             System.out.println("debug\tout of addMoney");
         }
     }
@@ -266,6 +302,7 @@ public class bankSoftware {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            populateHashMap();
             System.out.println("debug\tout of withdrawMoney");
         }
     }
