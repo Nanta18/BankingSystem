@@ -23,69 +23,115 @@ public class bankSoftware {
         System.out.println(accountDetails);
         applicationWindow();
         readFile();
-        userPrompt();
+        // userPrompt();
     }
 
     public static void applicationWindow() {
         try {
             JFrame JFWindow = new JFrame();
-            JFWindow.setLayout(new GridLayout());
+            JFWindow.setLayout(new FlowLayout());
 
             JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            JTextArea tekstialue = new JTextArea();
-            tekstialue.setEditable(false);
-
-            JScrollPane rullausJutu = new JScrollPane(tekstialue);
-            JFWindow.getContentPane().add(rullausJutu);
-
             JFWindow.setSize(400, 400);
-            JFWindow.setVisible(true);
+
             JFWindow.setTitle("Turku Wallstreet Bank");
 
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
                 button.setName(key);
+                button.setPreferredSize(new Dimension(JFWindow.getWidth(), 50));
                 JFWindow.getContentPane().add(button);
-
+                JFWindow.setVisible(true);
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         /*
                          * debug line mikä napeista valittiin, tätä tietoa voidaan käyttää myöhemmin
-                         * hashmapin päivitykseen
+                         * hashmapin päivitykseen > napin nimet tulevat käyttäjien nimistä joten
+                         * toimivat
+                         * avaimina hashmappiin josta haetaan käyttäjän pankkitilin saldo.
                          */
                         String selectedOptionString = (String) button.getName();
                         System.out.println("user " + selectedOptionString + " clicked");
 
-                        String[] options = { "Option 1", "Option 2", };
+                        Double balance = accountDetails.get(selectedOptionString);
+
+                        /* Luodaan uusi ikkuna käyttäjälle joka valittiin. */
+                        JFrame balanceWindow = new JFrame();
+                        balanceWindow.setLayout(new FlowLayout());
+
+                        /*
+                         * tässä on tärkeää että käytetään dispose on close eikä exit on close, sillä
+                         * exit terminoi koko prosessin, dispose vain sulkee ikkunan.
+                         */
+                        balanceWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        balanceWindow.setSize(400, 225);
+                        balanceWindow.setTitle("Banking details for " + selectedOptionString);
+
+                        JLabel label = new JLabel("Account Balance: " + balance);
+                        balanceWindow.getContentPane().add(label);
+                        balanceWindow.setLocationRelativeTo(null); // KREDIITIT STACKOVERFLOW nyt kun tiedän metodin
+                                                                   // olemassaolosta, sen dokumentaatiossa lukee että
+                                                                   // jos argumentti on null niin ikkuna ilmestyy ruudun
+                                                                   // keskelle.:
+                                                                   // https://stackoverflow.com/questions/9543320/how-to-position-the-form-in-the-center-screen
+
+                        String[] options = {
+                                " ",
+                                "addUser()",
+                                "deleteUser()",
+                                "addMoney()",
+                                "withdrawMoney()",
+                                "transferMoney()",
+                        };
+
                         JComboBox<String> comboBox = new JComboBox<>(options);
+                        balanceWindow.getContentPane().add(comboBox);
 
-                        JOptionPane.showMessageDialog(JFWindow, comboBox, "Select an option",
-                                JOptionPane.QUESTION_MESSAGE);
+                        /*
+                         * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
+                         * balancewindowiin, sit tajusin että tää on popup...
+                         */
+                        // JOptionPane.showMessageDialog(balanceWindow, comboBox, "Select an option",
+                        // JOptionPane.INFORMATION_MESSAGE);
 
+                        JButton submitButton = new JButton();
+                        submitButton.setPreferredSize(new Dimension(80, 25));
+                        submitButton.setName("submit-button");
+                        submitButton.setText("submit");
+                        balanceWindow.add(submitButton);
+
+                        balanceWindow.setVisible(true);
                         String selectedOption = (String) comboBox.getSelectedItem();
-
-                        if (selectedOption.equals("Option 1")) {
-                            buttonDebug1();
-                        } else if (selectedOption.equals("Option 2")) {
-                            buttonDebug2();
-                        }
+                        buttonHandler(selectedOption);
                     }
                 });
             }
         } finally {
-
+            System.out.println("exited.");
         }
     }
 
-    /* debug funktiot nappuloille */
-    public static void buttonDebug1() {
-        System.out.println("1");
-    }
+    public static void buttonHandler(String selectedOption) {
+        if (selectedOption.equals("addUser()")) {
+            System.out.println("DEBUG\tCalling " + selectedOption);
+            System.out.println(selectedOption);
+            addUser();
 
-    public static void buttonDebug2() {
-        System.out.println("2");
+        } else if (selectedOption.equals("deleteUser()")) {
+            deleteUser();
+            System.out.println("Calling " + selectedOption);
+        } else if (selectedOption.equals("addMoney()")) {
+            addMoney();
+            System.out.println("Calling " + selectedOption);
+        } else if (selectedOption.equals("withdrawMoney()")) {
+            withdrawMoney();
+            System.out.println("Calling " + selectedOption);
+        } else if (selectedOption.equals("transferMoney()")) {
+            transferMoney();
+            System.out.println("Calling " + selectedOption);
+        }
     }
 
     public static void userPrompt() {
