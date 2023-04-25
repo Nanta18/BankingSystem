@@ -114,13 +114,6 @@ public class bankSoftware {
                                                                        // keskelle.:
                                                                        // https://stackoverflow.com/questions/9543320/how-to-position-the-form-in-the-center-screen
 
-                            String[] options = {
-                                    " ",
-                                    "addMoney()",
-                                    "withdrawMoney()",
-                                    "transferMoney()",
-                            };
-
                             /*
                              * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
                              * balancewindowiin, sit tajusin että tää on popup...
