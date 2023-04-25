@@ -26,14 +26,6 @@ public class bankSoftware {
     public static void applicationWindow() {
         try {
             JFrame JFWindow = new JFrame();
-
-            JFWindow.setBackground(new Color(255,255,255));
-            JFWindow.repaint(0, 0, 0, 0, 0);
-            ImageIcon logoIcon = new ImageIcon("logo.png");
-            JFWindow.setIconImage(logoIcon.getImage());
-
-            JFWindow.setResizable(false);
-
             JFWindow.setLayout(new FlowLayout());
 
             JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,13 +34,15 @@ public class bankSoftware {
 
             JFWindow.setTitle("Turku Wallstreet Bank");
 
-           
+            ImageIcon logo = new ImageIcon("logo.png");
+
+            JFWindow.setIconImage(logo.getImage());
 
             /* Add user nappi */
+
             JButton addUserButton = new JButton();
             addUserButton.setName("addUserButton");
             addUserButton.setText("Add a user");
-            addUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
             addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
             JFWindow.add(addUserButton);
 
@@ -58,17 +52,15 @@ public class bankSoftware {
                     String userName = JOptionPane.showInputDialog(JFWindow, "Enter user to be added:");
                     if (userName != null && !userName.isEmpty()) {
                         addUser(userName);
-                        JButton newUserButton = new JButton(userName);
-                        newUserButton.setName(userName);
-                        newUserButton.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
-                        JFWindow.getContentPane().add(newUserButton);
                     } else {
                         JOptionPane.showMessageDialog(JFWindow, "Invalid user name.");
                     }
                     // Add new button to the GUI..... this took way too much work, idk what i was
                     // thinking jesus christ.... the voices.
-                    
-                    
+                    JButton newUserButton = new JButton(userName);
+                    newUserButton.setName(userName);
+                    newUserButton.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
+                    JFWindow.getContentPane().add(newUserButton);
                     JFWindow.getContentPane().revalidate();
                     JFWindow.getContentPane().repaint();
                     newUserButton.addActionListener(new ActionListener() {
@@ -144,6 +136,7 @@ public class bankSoftware {
                                     label.setText("Account Balance: " + balance);
                                     balanceWindow.revalidate();
                                     balanceWindow.repaint();
+                                    
                                 }
                             });
                         }
@@ -199,17 +192,16 @@ public class bankSoftware {
             accountsTextField.setEditable(false);
             accountsTextField.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
             JFWindow.add(accountsTextField);
+            JFWindow.revalidate();
 
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
-                JFWindow.setBackground(new Color(38, 47, 48));
                 button.setName(key);
                 button.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
                 JFWindow.getContentPane().add(button);
                 JFWindow.setVisible(true);
                 button.revalidate();
                 button.repaint();
-                JFWindow.revalidate();
                 JFWindow.revalidate();
                 button.addActionListener(new ActionListener() {
                     @Override
@@ -290,14 +282,16 @@ public class bankSoftware {
             Scanner scIN = new Scanner(bankDetails);
             int linesCheck = 0;
 
+            if (accountDetails.size() == 0) {
+                accountDetails.put("Admin", 1000.0);
+            }
+
             while (scIN.hasNextLine()) {
                 String[] temp = scIN.nextLine().split(",");
                 accountDetails.put(temp[0], Double.parseDouble(temp[1]));
                 linesCheck++;
             }
-            // if (accountDetails.size() == 0) {
-            // accountDetails.put("bankAdmin", 1000.0);
-            // }
+
             System.out.println("\nHashmap populated with " + linesCheck + "entries.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -310,7 +304,6 @@ public class bankSoftware {
         try {
             File bankDetails = new File(fileName);
             FileWriter bdWriter = new FileWriter(bankDetails, true);
-            Scanner scIN = new Scanner(System.in);
 
             String name = buttonInput;
             Double initialBalance = 0.0;
@@ -384,9 +377,10 @@ public class bankSoftware {
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
             System.out.println("\nhow much money to add?");
-            Double amount = scIN.nextDouble();
+            String amountStr = scIN.nextLine();
+            Double amount = Double.parseDouble(amountStr);
             System.out.println("\nto what account should the money be added?");
-            String accountName = scIN.next();
+            String accountName = scIN.nextLine();
 
             accountDetails.replace(accountName, (accountDetails.get(accountName) + amount));
 
