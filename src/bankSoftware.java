@@ -95,8 +95,6 @@ public class bankSoftware {
                             JFrame balanceWindow = new JFrame();
                             balanceWindow.setLayout(new FlowLayout());
 
-                            
-
                             /*
                              * tässä on tärkeää että käytetään dispose on close eikä exit on close, sillä
                              * exit terminoi koko prosessin, dispose vain sulkee ikkunan.
@@ -105,7 +103,6 @@ public class bankSoftware {
                             balanceWindow.setSize(400, 225);
                             balanceWindow.setTitle("Banking details for " + selectedOptionString);
                             balanceWindow.setResizable(false);
-                            
 
                             JLabel label = new JLabel("Account Balance: " + balance);
                             balanceWindow.getContentPane().add(label);
@@ -127,8 +124,6 @@ public class bankSoftware {
                             JComboBox<String> comboBox = new JComboBox<>(options);
                             balanceWindow.getContentPane().add(comboBox);
 
-
-
                             /*
                              * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
                              * balancewindowiin, sit tajusin että tää on popup...
@@ -148,8 +143,6 @@ public class bankSoftware {
                             balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
                             balanceWindow.setVisible(true);
 
-                     
-
                             /*
                              * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
                              * funktiota joka on valittu combobox elementissä.
@@ -162,7 +155,7 @@ public class bankSoftware {
                                     label.setText("Account Balance: " + balance);
                                     balanceWindow.revalidate();
                                     balanceWindow.repaint();
-                                    
+
                                 }
                             });
                         }
@@ -284,6 +277,20 @@ public class bankSoftware {
                         balanceWindow.revalidate();
                         balanceWindow.repaint();
 
+                        JButton addButton = new JButton("Add Money");
+                        addButton.setName("addButton");
+                        String addMoneyNameString = (String) button.getName();
+                        balanceWindow.add(addButton);
+                        addButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                Double addMoneyAmount = (Double.parseDouble(
+                                        JOptionPane.showInputDialog(JFWindow, "Enter money amount to be added:")));
+                                addMoney(addMoneyNameString, addMoneyAmount);
+                                balance = accountDetails.get(selectedOptionString);
+                                label.setText("Account Balance: " + balance);
+                            }
+                        });
+
                         submitButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 String selectedOption = (String) comboBox.getSelectedItem();
@@ -307,7 +314,7 @@ public class bankSoftware {
         if (selectedOption.equals(" ")) {
             System.out.println("do nothing.");
         } else if (selectedOption.equals("addMoney()")) {
-            addMoney();
+            // addMoney();
             System.out.println("Calling " + selectedOption);
         } else if (selectedOption.equals("withdrawMoney()")) {
             withdrawMoney();
@@ -397,7 +404,7 @@ public class bankSoftware {
         }
     }
 
-    public static void addMoney() {
+    public static void addMoney(String userFromGui, Double amountFromGui) {
         try {
             /*
              * callataan populate hashmap joka päivittää hashmapin siinä tapauksessa jos
@@ -420,10 +427,10 @@ public class bankSoftware {
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
             System.out.println("\nhow much money to add?");
-            String amountStr = scIN.nextLine();
-            Double amount = Double.parseDouble(amountStr);
+            // String amountStr = scIN.nextLine();
+            Double amount = amountFromGui; // Double.parseDouble(amountStr)
             System.out.println("\nto what account should the money be added?");
-            String accountName = scIN.nextLine();
+            String accountName = userFromGui; // scIN.nextLine()
 
             accountDetails.replace(accountName, (accountDetails.get(accountName) + amount));
 
