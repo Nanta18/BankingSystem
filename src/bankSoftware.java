@@ -121,9 +121,6 @@ public class bankSoftware {
                                     "transferMoney()",
                             };
 
-                            JComboBox<String> comboBox = new JComboBox<>(options);
-                            balanceWindow.getContentPane().add(comboBox);
-
                             /*
                              * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
                              * balancewindowiin, sit tajusin että tää on popup...
@@ -131,14 +128,6 @@ public class bankSoftware {
                             // JOptionPane.showMessageDialog(balanceWindow, comboBox, "Select an option",
                             // JOptionPane.INFORMATION_MESSAGE);
 
-                            JButton submitButton = new JButton();
-                            submitButton.setPreferredSize(new Dimension(80, 25));
-                            submitButton.setName("submit-button");
-                            submitButton.setText("submit");
-                            submitButton.setForeground(new Color(211, 255, 243));
-                            submitButton.setBackground(new Color(128, 135, 130));
-                            submitButton.setFocusable(false);
-                            balanceWindow.add(submitButton);
                             balanceWindow.setIconImage(logo.getImage());
                             balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
                             balanceWindow.setVisible(true);
@@ -173,19 +162,21 @@ public class bankSoftware {
                                 }
                             });
 
-                            /*
-                             * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
-                             * funktiota joka on valittu combobox elementissä.
-                             */
-                            submitButton.addActionListener(new ActionListener() {
+                            /* callaus transfermoneylle */
+                            JButton transferButton = new JButton("Transfer money");
+                            transferButton.setName("transferButton");
+                            String senderNameString = (String) newUserButton.getName();
+                            balanceWindow.add(transferButton);
+                            transferButton.addActionListener(new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
-                                    String selectedOption = (String) comboBox.getSelectedItem();
-                                    buttonHandler(selectedOption);
+                                    String recipientName = JOptionPane.showInputDialog(JFWindow,
+                                            "Who do you want to send money to?");
+
+                                    Double transferMoneyAmount = (Double.parseDouble(
+                                            JOptionPane.showInputDialog(JFWindow, "How much money to transfer?")));
+                                    transferMoney(senderNameString, recipientName, transferMoneyAmount);
                                     balance = accountDetails.get(selectedOptionString);
                                     label.setText("Account Balance: " + balance);
-                                    balanceWindow.revalidate();
-                                    balanceWindow.repaint();
-
                                 }
                             });
                         }
@@ -281,24 +272,8 @@ public class bankSoftware {
                         balanceWindow.getContentPane().add(label);
                         balanceWindow.setLocationRelativeTo(null);
 
-                        String[] options = {
-                                " ",
-                                "addMoney()",
-                                "withdrawMoney()",
-                                "transferMoney()",
-                        };
-
-                        JComboBox<String> comboBox = new JComboBox<>(options);
-                        balanceWindow.getContentPane().add(comboBox);
-
-                        JButton submitButton = new JButton();
-                        submitButton.setPreferredSize(new Dimension(80, 25));
-                        submitButton.setName("submit-button");
-                        submitButton.setText("submit");
-                        submitButton.setBackground(new Color(128, 135, 130));
-                        submitButton.setForeground(new Color(211, 255, 243));
                         balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
-                        balanceWindow.add(submitButton);
+
                         ImageIcon logo = new ImageIcon("logo.png");
                         balanceWindow.setBackground(new Color(128, 135, 130));
                         balanceWindow.setIconImage(logo.getImage());
@@ -323,7 +298,7 @@ public class bankSoftware {
                         });
 
                         /* callaus withdrawmoneylle */
-                        JButton withdrawButton = new JButton("withdrawButton");
+                        JButton withdrawButton = new JButton("Withdraw Money");
                         withdrawButton.setName("withdrawButton");
                         String withdrawMoneyNameString = (String) button.getName();
                         balanceWindow.add(withdrawButton);
@@ -337,15 +312,24 @@ public class bankSoftware {
                             }
                         });
 
-                        /* temporary submit */
-                        submitButton.addActionListener(new ActionListener() {
+                        /* callaus transfermoneylle */
+                        JButton transferButton = new JButton("Transfer money");
+                        transferButton.setName("transferButton");
+                        String senderNameString = (String) button.getName();
+                        balanceWindow.add(transferButton);
+                        transferButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                String selectedOption = (String) comboBox.getSelectedItem();
-                                buttonHandler(selectedOption);
-                                balanceWindow.revalidate();
-                                balanceWindow.repaint();
+                                String recipientName = JOptionPane.showInputDialog(JFWindow,
+                                        "Who do you want to send money to?");
+
+                                Double transferMoneyAmount = (Double.parseDouble(
+                                        JOptionPane.showInputDialog(JFWindow, "How much money to transfer?")));
+                                transferMoney(senderNameString, recipientName, transferMoneyAmount);
+                                balance = accountDetails.get(selectedOptionString);
+                                label.setText("Account Balance: " + balance);
                             }
                         });
+
                     }
                 });
             }
@@ -353,22 +337,6 @@ public class bankSoftware {
             e.printStackTrace();
         } finally {
             System.out.println("exited GUI.");
-        }
-    }
-
-    public static void buttonHandler(String selectedOption) {
-
-        if (selectedOption.equals(" ")) {
-            System.out.println("do nothing.");
-        } else if (selectedOption.equals("addMoney()")) {
-            // addMoney();
-            System.out.println("Calling " + selectedOption);
-        } else if (selectedOption.equals("withdrawMoney()")) {
-            // withdrawMoney();
-            System.out.println("Calling " + selectedOption);
-        } else if (selectedOption.equals("transferMoney()")) {
-            transferMoney();
-            System.out.println("Calling " + selectedOption);
         }
     }
 
@@ -563,7 +531,7 @@ public class bankSoftware {
         }
     }
 
-    public static void transferMoney() {
+    public static void transferMoney(String senderFromGui, String recipientFromGui, Double amountFromGui) {
         try {
             populateHashMap();
             File bankDetails = new File(fileName);
@@ -574,11 +542,11 @@ public class bankSoftware {
             System.out.println("\npossible senders and receivers: " + accountDetails.keySet());
 
             System.out.println("\nGive sender:");
-            String sender = scIN.nextLine();
+            String sender = senderFromGui;// scIN.nextLine();
             System.out.println("\nGive recipient:");
-            String recipient = scIN.nextLine();
+            String recipient = recipientFromGui;// scIN.nextLine();
             System.out.println("\nhow much money do you want to transfer?");
-            Double amount = scIN.nextDouble();
+            Double amount = amountFromGui;// scIN.nextDouble();
 
             /*
              * Tässä tarkistetaan onko käyttäjällä tarpeeksi siirrettävää rahaa ja ovatko
