@@ -277,6 +277,7 @@ public class bankSoftware {
                         balanceWindow.revalidate();
                         balanceWindow.repaint();
 
+                        /* callaus addmoneylle */
                         JButton addButton = new JButton("Add Money");
                         addButton.setName("addButton");
                         String addMoneyNameString = (String) button.getName();
@@ -291,6 +292,22 @@ public class bankSoftware {
                             }
                         });
 
+                        /* callaus withdrawmoneylle */
+                        JButton withdrawButton = new JButton("withdrawButton");
+                        withdrawButton.setName("withdrawButton");
+                        String withdrawMoneyNameString = (String) button.getName();
+                        balanceWindow.add(withdrawButton);
+                        withdrawButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                Double withdrawMoneyAmount = (Double.parseDouble(
+                                        JOptionPane.showInputDialog(JFWindow, "Enter money amount to withdraw")));
+                                withdrawMoney(withdrawMoneyNameString, withdrawMoneyAmount);
+                                balance = accountDetails.get(selectedOptionString);
+                                label.setText("Account Balance: " + balance);
+                            }
+                        });
+
+                        /* temporary submit */
                         submitButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 String selectedOption = (String) comboBox.getSelectedItem();
@@ -317,7 +334,7 @@ public class bankSoftware {
             // addMoney();
             System.out.println("Calling " + selectedOption);
         } else if (selectedOption.equals("withdrawMoney()")) {
-            withdrawMoney();
+            // withdrawMoney();
             System.out.println("Calling " + selectedOption);
         } else if (selectedOption.equals("transferMoney()")) {
             transferMoney();
@@ -467,7 +484,7 @@ public class bankSoftware {
         }
     }
 
-    public static void withdrawMoney() {
+    public static void withdrawMoney(String userFromGui, Double amountFromGui) {
         try {
             populateHashMap();
             File bankDetails = new File(fileName);
@@ -485,9 +502,9 @@ public class bankSoftware {
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
             System.out.println("\nhow much money to withdraw?");
-            Double amount = scIN.nextDouble();
+            Double amount = amountFromGui;// scIN.nextDouble();
             System.out.println("\nfrom which account do you want to withdraw?");
-            String accountName = scIN.next();
+            String accountName = userFromGui;// scIN.next();
 
             /*
              * Käytetään samaa logiikkaa kuin addMoney() metodissa, lisättynä vain tarkistus
