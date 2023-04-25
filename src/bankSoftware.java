@@ -104,6 +104,8 @@ public class bankSoftware {
                             balanceWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                             balanceWindow.setSize(400, 225);
                             balanceWindow.setTitle("Banking details for " + selectedOptionString);
+                            balanceWindow.setResizable(false);
+                            
 
                             JLabel label = new JLabel("Account Balance: " + balance);
                             balanceWindow.getContentPane().add(label);
@@ -143,8 +145,7 @@ public class bankSoftware {
                             submitButton.setFocusable(false);
                             balanceWindow.add(submitButton);
                             balanceWindow.setIconImage(logo.getImage());
-
-                            balanceWindow.setBackground(new Color(101, 101, 101));
+                            balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
                             balanceWindow.setVisible(true);
 
                      
@@ -273,11 +274,13 @@ public class bankSoftware {
                         submitButton.setText("submit");
                         submitButton.setBackground(new Color(128, 135, 130));
                         submitButton.setForeground(new Color(211, 255, 243));
+                        balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
                         balanceWindow.add(submitButton);
                         ImageIcon logo = new ImageIcon("logo.png");
                         balanceWindow.setBackground(new Color(128, 135, 130));
                         balanceWindow.setIconImage(logo.getImage());
                         balanceWindow.setVisible(true);
+                        balanceWindow.setResizable(false);
                         balanceWindow.revalidate();
                         balanceWindow.repaint();
 
