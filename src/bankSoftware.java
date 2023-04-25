@@ -34,14 +34,40 @@ public class bankSoftware {
 
             JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            JFWindow.setSize(400, 400);
+            JFWindow.setSize(400, 500);
 
             JFWindow.setTitle("Turku Wallstreet Bank");
+            /* Add user nappi */
+            JButton addUserButton = new JButton();
+            addUserButton.setName("addUserButton");
+            addUserButton.setText("Add a user");
+            addUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
+            addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth(), 50));
+            JFWindow.add(addUserButton);
+
+            JTextField accountsTextField = new JTextField("Accounts:");
+            accountsTextField.setEditable(false);
+            JFWindow.add(accountsTextField);
+
+            ActionListener addUserButtonListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String userName = JOptionPane.showInputDialog(JFWindow, "Enter user to be added:");
+                    if (userName != null && !userName.isEmpty()) {
+                        addUser(userName);
+                    } else {
+                        JOptionPane.showMessageDialog(JFWindow, "Invalid user name.");
+                    }
+                    JFWindow.revalidate();
+                    JFWindow.repaint();
+                }
+            };
+            addUserButton.addActionListener(addUserButtonListener);
 
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
                 button.setName(key);
-                button.setPreferredSize(new Dimension(JFWindow.getWidth(), 50));
+                button.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
                 JFWindow.getContentPane().add(button);
                 JFWindow.setVisible(true);
                 button.addActionListener(new ActionListener() {
@@ -80,7 +106,6 @@ public class bankSoftware {
 
                         String[] options = {
                                 " ",
-                                "addUser()",
                                 "deleteUser()",
                                 "addMoney()",
                                 "withdrawMoney()",
@@ -115,22 +140,16 @@ public class bankSoftware {
                                 buttonHandler(selectedOption);
                             }
                         });
-
                     }
                 });
             }
         } finally {
-            System.out.println("exited.");
+            System.out.println("exited GUI.");
         }
     }
 
     public static void buttonHandler(String selectedOption) {
-        if (selectedOption.equals("addUser()")) {
-            System.out.println("DEBUG\tCalling " + selectedOption);
-            System.out.println(selectedOption);
-            addUser();
-
-        } else if (selectedOption.equals("deleteUser()")) {
+        if (selectedOption.equals("deleteUser()")) {
             deleteUser();
             System.out.println("Calling " + selectedOption);
         } else if (selectedOption.equals("addMoney()")) {
@@ -160,7 +179,7 @@ public class bankSoftware {
                 input = scIN.nextLine();
 
                 if (input.equals("1")) {
-                    addUser();
+                    addUser(input);
                 } else if (input.equals("2")) {
                     deleteUser();
                 } else if (input.equals("3")) {
@@ -188,32 +207,34 @@ public class bankSoftware {
                 accountDetails.put(temp[0], Double.parseDouble(temp[1]));
                 linesCheck++;
             }
-            System.out.println("Hashmap populated with " + linesCheck + "entries.");
+            if (accountDetails.size() == 0) {
+                accountDetails.put("bankAdmin", 1000.0);
+            }
+            System.out.println("\nHashmap populated with " + linesCheck + "entries.");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            System.out.println("left populateHashMap()");
+            System.out.println("DEBUG:\nleft populateHashMap()");
         }
     }
 
-    public static void addUser() {
+    public static void addUser(String buttonInput) {
         try {
             File bankDetails = new File(fileName);
             FileWriter bdWriter = new FileWriter(bankDetails, true);
             Scanner scIN = new Scanner(System.in);
 
-            String name = "";
+            String name = buttonInput;
             Double initialBalance = 0.0;
 
-            System.out.println("Give the user to be added");
-            name = scIN.nextLine();
+            System.out.println("\nGive the user to be added");
 
-            if (!(name.equals(""))) {
+            if (!(name.equals("")) && !accountDetails.containsKey(name)) {
                 bdWriter.append(name + "," + initialBalance + "\r\n");
                 bdWriter.close();
-                System.out.println("User " + name + " added");
+                System.out.println("\nUser " + name + " added");
             } else {
-                System.out.println("jotain meni pieleen");
+                System.out.println("DEBUG:\nKäyttäjä on jo olemassa tai nimi on invalid.");
             }
             populateHashMap();
 
@@ -230,7 +251,7 @@ public class bankSoftware {
 
             String nameToDelete = "";
 
-            System.out.println("Give the user to be deleted.\noptions:");
+            System.out.println("\nGive the user to be deleted.\noptions:");
             for (String name : accountDetails.keySet()) {
                 System.out.println(name);
             }
@@ -274,9 +295,9 @@ public class bankSoftware {
             }
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
-            System.out.println("how much money to add?");
+            System.out.println("\nhow much money to add?");
             Double amount = scIN.nextDouble();
-            System.out.println("to what account should the money be added?");
+            System.out.println("\nto what account should the money be added?");
             String accountName = scIN.next();
 
             accountDetails.replace(accountName, (accountDetails.get(accountName) + amount));
@@ -300,7 +321,6 @@ public class bankSoftware {
     public static void readFile() {
         try {
             File bankDetails = new File(fileName);
-            Scanner fileReader = new Scanner(bankDetails);
 
             if (bankDetails.exists()) {
                 System.out.println("File name: " + bankDetails.getName());
@@ -332,9 +352,9 @@ public class bankSoftware {
             }
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
-            System.out.println("how much money to withdraw?");
+            System.out.println("\nhow much money to withdraw?");
             Double amount = scIN.nextDouble();
-            System.out.println("from which account do you want to withdraw?");
+            System.out.println("\nfrom which account do you want to withdraw?");
             String accountName = scIN.next();
 
             /*
@@ -344,7 +364,7 @@ public class bankSoftware {
             if (accountDetails.get(accountName) >= amount) {
                 accountDetails.replace(accountName, (accountDetails.get(accountName) - amount));
             } else {
-                System.out.println("debug: \tMoney was not withdrawn\n\tAmount or user issue");
+                System.out.println("\ndebug: \tMoney was not withdrawn\n\tAmount or user issue");
             }
 
             /* Write updated contents back to file */
@@ -372,13 +392,13 @@ public class bankSoftware {
             FileWriter fWriter = new FileWriter(bankDetails, false);
 
             System.out.println("Transferring money");
-            System.out.println("possible senders and receivers: " + accountDetails.keySet());
+            System.out.println("\npossible senders and receivers: " + accountDetails.keySet());
 
-            System.out.println("Give sender:");
+            System.out.println("\nGive sender:");
             String sender = scIN.nextLine();
-            System.out.println("Give recipient:");
+            System.out.println("\nGive recipient:");
             String recipient = scIN.nextLine();
-            System.out.println("how much money do you want to transfer?");
+            System.out.println("\nhow much money do you want to transfer?");
             Double amount = scIN.nextDouble();
 
             /*
@@ -386,11 +406,11 @@ public class bankSoftware {
              * molemmat, lähettäjä ja vastaanottaja valideja.
              */
             if (accountDetails.containsKey(sender) && accountDetails.containsKey(recipient)
-                    && (accountDetails.get(sender) > amount)) {
+                    && (accountDetails.get(sender) >= amount)) {
                 accountDetails.replace(sender, accountDetails.get(sender) - amount);
                 accountDetails.replace(recipient, accountDetails.get(recipient) + amount);
             } else {
-                System.out.println("sender or recipient not found, or sender too poor.");
+                System.out.println("\nsender or recipient not found, or sender too poor.");
             }
 
             /* Write updated contents back to file */
@@ -403,7 +423,7 @@ public class bankSoftware {
             e.printStackTrace();
         } finally {
             populateHashMap();
-            System.out.println("debug\tout of transferMoney");
+            System.out.println("\ndebug\tout of transferMoney");
         }
     }
 }

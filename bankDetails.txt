@@ -1,5 +1,6 @@
+Kalja,0.0
 Abbababa,0.0
-a,5.0
-User,2.5
-Rotta,5.0
-Olut,5.0
+Aaaa,0.0
+testi,0.0
+olut,0.0
+e,0.0
