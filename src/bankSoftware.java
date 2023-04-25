@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.desktop.ScreenSleepEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -105,6 +106,7 @@ public class bankSoftware {
                             balanceWindow.setResizable(false);
 
                             JLabel label = new JLabel("Account Balance: " + balance);
+                            label.setForeground(new Color(211, 255, 243));
                             balanceWindow.getContentPane().add(label);
                             balanceWindow.setLocationRelativeTo(null); // KREDIITIT STACKOVERFLOW nyt kun tiedän metodin
                                                                        // olemassaolosta, sen dokumentaatiossa lukee
@@ -128,6 +130,10 @@ public class bankSoftware {
                             /* callaus addmoneylle */
                             JButton addButton = new JButton("Add Money");
                             addButton.setName("addButton");
+                            addButton.setBackground(new Color(128, 135, 130));
+                            addButton.setForeground(new Color(211, 255, 243));
+                            addButton.setFocusable(false);
+
                             String addMoneyNameString = (String) newUserButton.getName();
                             balanceWindow.add(addButton);
                             addButton.addActionListener(new ActionListener() {
@@ -141,8 +147,11 @@ public class bankSoftware {
                             });
 
                             /* callaus withdrawmoneylle */
-                            JButton withdrawButton = new JButton("withdrawButton");
+                            JButton withdrawButton = new JButton("Withdraw money");
                             withdrawButton.setName("withdrawButton");
+                            withdrawButton.setBackground(new Color(128, 135, 130));
+                            withdrawButton.setForeground(new Color(211, 255, 243));
+                            withdrawButton.setFocusable(false);
                             String withdrawMoneyNameString = (String) newUserButton.getName();
                             balanceWindow.add(withdrawButton);
                             withdrawButton.addActionListener(new ActionListener() {
@@ -158,6 +167,9 @@ public class bankSoftware {
                             /* callaus transfermoneylle */
                             JButton transferButton = new JButton("Transfer money");
                             transferButton.setName("transferButton");
+                            transferButton.setBackground(new Color(128, 135, 130));
+                            transferButton.setForeground(new Color(211, 255, 243));
+                            transferButton.setFocusable(false);
                             String senderNameString = (String) newUserButton.getName();
                             balanceWindow.add(transferButton);
                             transferButton.addActionListener(new ActionListener() {
@@ -262,6 +274,7 @@ public class bankSoftware {
                         balanceWindow.setTitle("Banking details for " + selectedOptionString);
 
                         JLabel label = new JLabel("Account Balance: " + balance);
+                        label.setForeground(new Color(211, 255, 243));
                         balanceWindow.getContentPane().add(label);
                         balanceWindow.setLocationRelativeTo(null);
 
@@ -278,6 +291,10 @@ public class bankSoftware {
                         /* callaus addmoneylle */
                         JButton addButton = new JButton("Add Money");
                         addButton.setName("addButton");
+                        addButton.setBackground(new Color(128, 135, 130));
+                        addButton.setForeground(new Color(211, 255, 243));
+                        addButton.setFocusable(false);
+
                         String addMoneyNameString = (String) button.getName();
                         balanceWindow.add(addButton);
                         addButton.addActionListener(new ActionListener() {
@@ -293,6 +310,10 @@ public class bankSoftware {
                         /* callaus withdrawmoneylle */
                         JButton withdrawButton = new JButton("Withdraw Money");
                         withdrawButton.setName("withdrawButton");
+                        withdrawButton.setBackground(new Color(128, 135, 130));
+                        withdrawButton.setForeground(new Color(211, 255, 243));
+                        withdrawButton.setFocusable(false);
+
                         String withdrawMoneyNameString = (String) button.getName();
                         balanceWindow.add(withdrawButton);
                         withdrawButton.addActionListener(new ActionListener() {
@@ -308,6 +329,10 @@ public class bankSoftware {
                         /* callaus transfermoneylle */
                         JButton transferButton = new JButton("Transfer money");
                         transferButton.setName("transferButton");
+                        transferButton.setBackground(new Color(128, 135, 130));
+                        transferButton.setForeground(new Color(211, 255, 243));
+                        transferButton.setFocusable(false);
+
                         String senderNameString = (String) button.getName();
                         balanceWindow.add(transferButton);
                         transferButton.addActionListener(new ActionListener() {

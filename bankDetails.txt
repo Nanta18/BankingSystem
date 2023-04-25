@@ -1,5 +1,1 @@
-a,4.0
-e,25.0
-Admin,970.0
-kalja,1.0
-c,0.0
+SQL uhrien rahasto,0.0
