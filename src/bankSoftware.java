@@ -34,6 +34,8 @@ public class bankSoftware {
 
             JFWindow.setTitle("Turku Wallstreet Bank");
 
+            JFWindow.setResizable(false);
+
             ImageIcon logo = new ImageIcon("logo.png");
 
             JFWindow.setIconImage(logo.getImage());
@@ -209,6 +211,7 @@ public class bankSoftware {
             accountsTextField.setForeground(new Color(211, 255, 243));
             accountsTextField.setHorizontalAlignment(JTextField.CENTER);
             accountsTextField.setEditable(false);
+            accountsTextField.setBorder(null);
             accountsTextField.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
             JFWindow.add(accountsTextField);
             JFWindow.revalidate();
