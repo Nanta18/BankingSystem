@@ -51,6 +51,7 @@ public class bankSoftware {
             addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
             addUserButton.setBackground(new Color(128, 135, 130));
             JFWindow.add(addUserButton);
+            JFWindow.setLocationRelativeTo(null);
 
             ActionListener addUserButtonListener = new ActionListener() {
                 @Override
