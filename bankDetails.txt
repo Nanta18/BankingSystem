@@ -1,6 +1,5 @@
-Kalja,0.0
-Abbababa,0.0
-Aaaa,0.0
-testi,0.0
-olut,0.0
+c,0.0
+d,0.0
 e,0.0
+f,0.0
+b,0.0

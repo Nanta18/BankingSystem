@@ -16,14 +16,11 @@ public class bankSoftware {
     public static final String fileName = "bankDetails.txt";
     public static HashMap<String, Double> accountDetails = new HashMap<>();
 
-    // userPrompt(), addUser(), addMoney(), withdrawMoney(), transferMoney(),
-    // deleteUser()
-
     public static void main(String[] args) {
+        readFile();
         populateHashMap();
         System.out.println(accountDetails);
         applicationWindow();
-        readFile();
         // userPrompt();
     }
 
@@ -37,12 +34,13 @@ public class bankSoftware {
             JFWindow.setSize(400, 500);
 
             JFWindow.setTitle("Turku Wallstreet Bank");
+
             /* Add user nappi */
             JButton addUserButton = new JButton();
             addUserButton.setName("addUserButton");
             addUserButton.setText("Add a user");
             addUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
-            addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth(), 50));
+            addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
             JFWindow.add(addUserButton);
 
             JTextField accountsTextField = new JTextField("Accounts:");
@@ -58,11 +56,59 @@ public class bankSoftware {
                     } else {
                         JOptionPane.showMessageDialog(JFWindow, "Invalid user name.");
                     }
-                    JFWindow.revalidate();
-                    JFWindow.repaint();
+                    // Add new button to the GUI..... this took way too much work, idk what i was
+                    // thinking jesus christ.... the voices.
+                    JButton newUserButton = new JButton(userName);
+                    newUserButton.setName(userName);
+                    newUserButton.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
+                    JFWindow.getContentPane().add(newUserButton);
+                    JFWindow.getContentPane().revalidate();
+                    JFWindow.getContentPane().repaint();
                 }
             };
             addUserButton.addActionListener(addUserButtonListener);
+
+            /* remove user nappi */
+            JButton deleteUserButton = new JButton();
+            deleteUserButton.setText("Delete a user");
+            deleteUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
+            deleteUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
+            deleteUserButton.setName("addUserButton");
+            JFWindow.add(deleteUserButton);
+
+            ActionListener deleteUserButtonListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String userName = JOptionPane.showInputDialog(JFWindow, "Enter user to be Deleted:");
+
+                    if (userName != null && !userName.isEmpty()) {
+                        deleteUser(userName);
+                        /* Remove button from the GUI */
+                        // tässä otetaan kaikki ikkunan componentit ja laitetaan listaan jota vastaan
+                        // voidaan verrata poisto-operaatiota varten.
+                        // component on awt:n objekti jolla on graafinen esitys, nappula tms.
+                        Component[] components = JFWindow.getContentPane().getComponents();
+                        for (Component component : components) {
+                            // Tarkistetaan onko component jbutton classin osa (instaneof metodi), ja
+                            // tarkastetaan onko
+                            // komponentin nimi sama kuin poistettava käyttäjä sovelluksesta.
+                            if (component instanceof JButton && ((JButton) component).getName().equals(userName)) {
+                                JFWindow.getContentPane().remove(component);
+                                JFWindow.getContentPane().revalidate();
+                                JFWindow.getContentPane().repaint();
+                                // tärkeää breakata jotta ei iteroida kaikkia nappeja jos mm. ensimmäinen
+                                // poistetaan.
+                                break;
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(JFWindow, "Invalid username.");
+                    }
+                    JFWindow.getContentPane().revalidate();
+                    JFWindow.getContentPane().repaint();
+                }
+            };
+            deleteUserButton.addActionListener(deleteUserButtonListener);
 
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
@@ -70,6 +116,10 @@ public class bankSoftware {
                 button.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
                 JFWindow.getContentPane().add(button);
                 JFWindow.setVisible(true);
+                button.revalidate();
+                button.repaint();
+                JFWindow.revalidate();
+                JFWindow.revalidate();
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -138,6 +188,7 @@ public class bankSoftware {
                             public void actionPerformed(ActionEvent e) {
                                 String selectedOption = (String) comboBox.getSelectedItem();
                                 buttonHandler(selectedOption);
+                                balanceWindow.repaint();
                             }
                         });
                     }
@@ -149,10 +200,8 @@ public class bankSoftware {
     }
 
     public static void buttonHandler(String selectedOption) {
-        if (selectedOption.equals("deleteUser()")) {
-            deleteUser();
-            System.out.println("Calling " + selectedOption);
-        } else if (selectedOption.equals("addMoney()")) {
+
+        if (selectedOption.equals("addMoney()")) {
             addMoney();
             System.out.println("Calling " + selectedOption);
         } else if (selectedOption.equals("withdrawMoney()")) {
@@ -181,7 +230,7 @@ public class bankSoftware {
                 if (input.equals("1")) {
                     addUser(input);
                 } else if (input.equals("2")) {
-                    deleteUser();
+                    deleteUser(input);
                 } else if (input.equals("3")) {
                     addMoney();
                 } else if (input.equals("4")) {
@@ -243,19 +292,17 @@ public class bankSoftware {
         }
     }
 
-    public static void deleteUser() {
+    public static void deleteUser(String buttonInput) {
         try {
             File bankDetails = new File(fileName);
             FileWriter bdWriter = new FileWriter(bankDetails, false);
-            Scanner scIN = new Scanner(System.in);
 
-            String nameToDelete = "";
+            String nameToDelete = buttonInput;
 
             System.out.println("\nGive the user to be deleted.\noptions:");
             for (String name : accountDetails.keySet()) {
                 System.out.println(name);
             }
-            nameToDelete = scIN.nextLine();
 
             if (accountDetails.containsKey(nameToDelete)) {
                 accountDetails.remove(nameToDelete);
