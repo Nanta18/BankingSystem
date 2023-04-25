@@ -234,6 +234,8 @@ public class bankSoftware {
             };
             deleteUserButton.addActionListener(deleteUserButtonListener);
 
+            /* graffa elementtejä vaan, accounts teksti. */
+
             JTextField accountsTextField = new JTextField("Accounts:");
             accountsTextField.setBackground(new Color(128, 135, 130));
             accountsTextField.setForeground(new Color(211, 255, 243));
@@ -244,6 +246,10 @@ public class bankSoftware {
             JFWindow.add(accountsTextField);
             JFWindow.revalidate();
 
+            /*
+             * mennään jokainen avain läpi hashmapissa, luodaaan jokaiselle oma nappi. loppu
+             * on boilerplate.
+             */
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
                 button.setName(key);
@@ -256,6 +262,14 @@ public class bankSoftware {
                 button.setForeground(new Color(211, 255, 243));
                 button.setFocusable(false);
                 JFWindow.revalidate();
+
+                /*
+                 * jokainen nappi saa actionlistenerin joka odottaa klikkauksia, klikkauksen
+                 * tapahtuessa avataan uusi ikkuna balancewindow, joka etsii käyttäjän balancen
+                 * hashmapista ja
+                 * jokaiselle käyttäjälle lisätään napit talletus, nosto ja
+                 * siirto-operaatioihin.
+                 */
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -263,8 +277,13 @@ public class bankSoftware {
                         String selectedOptionString = (String) button.getName();
                         System.out.println("user " + selectedOptionString + " clicked");
 
+                        /*
+                         * balance muuttujaa muokataan viimeisimmänn käyttäjänapin painalluksen
+                         * perusteella.
+                         */
                         balance = accountDetails.get(selectedOptionString);
 
+                        /* luodaan uusi ikkuna */
                         JFrame balanceWindow = new JFrame();
                         balanceWindow.setLayout(new FlowLayout());
 
@@ -275,6 +294,7 @@ public class bankSoftware {
                         JLabel label = new JLabel("Account Balance: " + balance);
                         label.setForeground(new Color(211, 255, 243));
                         balanceWindow.getContentPane().add(label);
+                        /* avaa uuden ikkunan ruudun keskelle. */
                         balanceWindow.setLocationRelativeTo(null);
 
                         balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
@@ -382,6 +402,13 @@ public class bankSoftware {
         }
     }
 
+    /**
+     * Adds a new user to the system with the given name and adds default balance to
+     * each added user. Data is saved to hashmap.
+     * 
+     * @param buttonInput The name of the user to be added, passed from GUI after
+     *                    user prompt.
+     */
     public static void addUser(String buttonInput) {
         try {
             File bankDetails = new File(fileName);
@@ -406,6 +433,18 @@ public class bankSoftware {
         }
     }
 
+    /**
+     * 
+     * This method deletes a user account from the bank system.
+     * It takes the user account name as input parameter.
+     * The method first reads the account details from the file into a HashMap.
+     * It then prompts the user for the user account name to be deleted.
+     * If the user account name is found in the HashMap, it is removed.
+     * The changes are then written back to the file.
+     * 
+     * @param buttonInput The user account name to be deleted, passed on from GUI
+     *                    after user prompt.
+     */
     public static void deleteUser(String buttonInput) {
         try {
             File bankDetails = new File(fileName);
@@ -436,6 +475,15 @@ public class bankSoftware {
         }
     }
 
+    /**
+     * 
+     * Adds money to a specified user account in the bank system.
+     * The account balance in the HashMap is updated with the added amount.
+     * The changes are then written back to the file.
+     * 
+     * @param userFromGui   The user account name to which money should be added.
+     * @param amountFromGui The amount to add to the user account.
+     */
     public static void addMoney(String userFromGui, Double amountFromGui) {
         try {
             /*
@@ -459,10 +507,9 @@ public class bankSoftware {
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
             System.out.println("\nhow much money to add?");
-            // String amountStr = scIN.nextLine();
-            Double amount = amountFromGui; // Double.parseDouble(amountStr)
+            Double amount = amountFromGui;
             System.out.println("\nto what account should the money be added?");
-            String accountName = userFromGui; // scIN.nextLine()
+            String accountName = userFromGui;
 
             accountDetails.replace(accountName, (accountDetails.get(accountName) + amount));
 
@@ -482,6 +529,7 @@ public class bankSoftware {
         }
     }
 
+    /* literally just reads the file and makes sure file exists. */
     public static void readFile() {
         try {
             File bankDetails = new File(fileName);
@@ -505,6 +553,20 @@ public class bankSoftware {
         }
     }
 
+    /**
+     * 
+     * This method withdraws money from a specified user account in the bank system.
+     * If the account has sufficient balance to cover the withdrawal amount,
+     * the account balance is updated in the HashMap and the changes are written
+     * back to the file.
+     * If the account does not have sufficient balance, an error message is
+     * displayed.
+     * 
+     * @param userFromGui   The user account name from which to withdraw money,
+     *                      passed from GUI.
+     * @param amountFromGui The amount to withdraw from the user account, passed
+     *                      from GUI.
+     */
     public static void withdrawMoney(String userFromGui, Double amountFromGui) {
         try {
             populateHashMap();
@@ -523,7 +585,7 @@ public class bankSoftware {
 
             /*
              * Käytetään samaa logiikkaa kuin addMoney() metodissa, lisättynä vain tarkistus
-             * että tilillä on enemmän rahaa kuin halutaan nostaa.
+             * että tilillä on enemmän tai saman verran rahaa kuin halutaan nostaa.
              */
             if (accountDetails.get(accountName) >= amount) {
                 accountDetails.replace(accountName, (accountDetails.get(accountName) - amount));
@@ -548,6 +610,22 @@ public class bankSoftware {
         }
     }
 
+    /**
+     * 
+     * Transfers money between sender and recipient accounts based on the provided
+     * information.
+     * 
+     * @param senderFromGui    The sender's account name passed from the graphical
+     *                         user interface (GUI).
+     * 
+     * @param recipientFromGui The recipient's account name passed from the
+     *                         graphical user interface (GUI).
+     * 
+     * @param amountFromGui    The amount of money to be transferred passed from
+     *                         the graphical user interface (GUI).
+     * 
+     * 
+     */
     public static void transferMoney(String senderFromGui, String recipientFromGui, Double amountFromGui) {
         try {
             populateHashMap();
