@@ -143,6 +143,36 @@ public class bankSoftware {
                             balanceWindow.getContentPane().setBackground(new Color(101, 101, 101));
                             balanceWindow.setVisible(true);
 
+                            /* callaus addmoneylle */
+                            JButton addButton = new JButton("Add Money");
+                            addButton.setName("addButton");
+                            String addMoneyNameString = (String) newUserButton.getName();
+                            balanceWindow.add(addButton);
+                            addButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    Double addMoneyAmount = (Double.parseDouble(
+                                            JOptionPane.showInputDialog(JFWindow, "Enter money amount to be added:")));
+                                    addMoney(addMoneyNameString, addMoneyAmount);
+                                    balance = accountDetails.get(selectedOptionString);
+                                    label.setText("Account Balance: " + balance);
+                                }
+                            });
+
+                            /* callaus withdrawmoneylle */
+                            JButton withdrawButton = new JButton("withdrawButton");
+                            withdrawButton.setName("withdrawButton");
+                            String withdrawMoneyNameString = (String) newUserButton.getName();
+                            balanceWindow.add(withdrawButton);
+                            withdrawButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    Double withdrawMoneyAmount = (Double.parseDouble(
+                                            JOptionPane.showInputDialog(JFWindow, "Enter money amount to withdraw")));
+                                    withdrawMoney(withdrawMoneyNameString, withdrawMoneyAmount);
+                                    balance = accountDetails.get(selectedOptionString);
+                                    label.setText("Account Balance: " + balance);
+                                }
+                            });
+
                             /*
                              * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
                              * funktiota joka on valittu combobox elementissä.
