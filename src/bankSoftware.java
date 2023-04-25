@@ -27,6 +27,14 @@ public class bankSoftware {
     public static void applicationWindow() {
         try {
             JFrame JFWindow = new JFrame();
+
+            JFWindow.setBackground(new Color(255,255,255));
+            JFWindow.repaint(0, 0, 0, 0, 0);
+            ImageIcon logoIcon = new ImageIcon("logo.png");
+            JFWindow.setIconImage(logoIcon.getImage());
+
+            JFWindow.setResizable(false);
+
             JFWindow.setLayout(new FlowLayout());
 
             JFWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,6 +42,8 @@ public class bankSoftware {
             JFWindow.setSize(400, 500);
 
             JFWindow.setTitle("Turku Wallstreet Bank");
+
+           
 
             /* Add user nappi */
             JButton addUserButton = new JButton();
@@ -53,15 +63,17 @@ public class bankSoftware {
                     String userName = JOptionPane.showInputDialog(JFWindow, "Enter user to be added:");
                     if (userName != null && !userName.isEmpty()) {
                         addUser(userName);
+                        JButton newUserButton = new JButton(userName);
+                        newUserButton.setName(userName);
+                        newUserButton.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
+                        JFWindow.getContentPane().add(newUserButton);
                     } else {
                         JOptionPane.showMessageDialog(JFWindow, "Invalid user name.");
                     }
                     // Add new button to the GUI..... this took way too much work, idk what i was
                     // thinking jesus christ.... the voices.
-                    JButton newUserButton = new JButton(userName);
-                    newUserButton.setName(userName);
-                    newUserButton.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
-                    JFWindow.getContentPane().add(newUserButton);
+                    
+                    
                     JFWindow.getContentPane().revalidate();
                     JFWindow.getContentPane().repaint();
                 }
@@ -112,6 +124,7 @@ public class bankSoftware {
 
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
+                JFWindow.setBackground(new Color(38, 47, 48));
                 button.setName(key);
                 button.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
                 JFWindow.getContentPane().add(button);
