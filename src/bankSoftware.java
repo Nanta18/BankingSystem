@@ -471,6 +471,12 @@ public class bankSoftware {
         try {
             File bankDetails = new File(fileName);
 
+            if (bankDetails.createNewFile()) {
+                System.out.println("File created: " + bankDetails.getName() + "at" + bankDetails.getAbsolutePath());
+            } else {
+                System.out.println("File already exists at: " + bankDetails.getAbsolutePath());
+            }
+
             if (bankDetails.exists()) {
                 System.out.println("File name: " + bankDetails.getName());
                 System.out.println("Absolute path: " + bankDetails.getAbsolutePath());
@@ -493,12 +499,6 @@ public class bankSoftware {
 
             /* debug testi miltä hashmap näyttää metodin alussa. */
             System.out.println(accountDetails);
-
-            if (bankDetails.createNewFile()) {
-                System.out.println("File created: " + bankDetails.getName() + "at" + bankDetails.getAbsolutePath());
-            } else {
-                System.out.println("File already exists at: " + bankDetails.getAbsolutePath());
-            }
 
             /* otetaan käyttäjän syötteet ja päivitetään hashmap */
             System.out.println("\nhow much money to withdraw?");
