@@ -1,2 +1,0 @@
-Nanta,60500.0
-bankAdmin,500.0

@@ -21,7 +21,6 @@ public class bankSoftware {
         populateHashMap();
         System.out.println(accountDetails);
         applicationWindow();
-        // userPrompt();
     }
 
     public static void applicationWindow() {
@@ -223,37 +222,6 @@ public class bankSoftware {
         } else if (selectedOption.equals("transferMoney()")) {
             transferMoney();
             System.out.println("Calling " + selectedOption);
-        }
-    }
-
-    public static void userPrompt() {
-        try {
-            Scanner scIN = new Scanner(System.in);
-            String input = "";
-            while (!(input.equals("6"))) {
-                System.out.println("1) - Add an user\n" +
-                        "2) - Delete an user\n" +
-                        "3) - Add money\n" +
-                        "4) - Withdraw money\n" +
-                        "5) - Transfer money\n" +
-                        "6) - Exit the application\n");
-
-                input = scIN.nextLine();
-
-                if (input.equals("1")) {
-                    addUser(input);
-                } else if (input.equals("2")) {
-                    deleteUser(input);
-                } else if (input.equals("3")) {
-                    addMoney();
-                } else if (input.equals("4")) {
-                    withdrawMoney();
-                } else if (input.equals("5")) {
-                    transferMoney();
-                }
-            }
-        } finally {
-            System.out.println("exited");
         }
     }
 
