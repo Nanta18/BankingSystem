@@ -47,6 +47,7 @@ public class bankSoftware {
             JButton addUserButton = new JButton();
             addUserButton.setName("addUserButton");
             addUserButton.setText("Add a user");
+            addUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
             addUserButton.setForeground(new Color(211, 255, 243));
             JFWindow.setLocationRelativeTo(null);
             addUserButton.setFocusable(false);
