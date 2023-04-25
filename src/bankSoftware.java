@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 
 public class bankSoftware {
     /*
@@ -14,6 +13,7 @@ public class bankSoftware {
      * avaimia.
      */
     public static final String fileName = "bankDetails.txt";
+    public static double balance = 0.0;
     public static HashMap<String, Double> accountDetails = new HashMap<>();
 
     public static void main(String[] args) {
@@ -52,10 +52,6 @@ public class bankSoftware {
             addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
             JFWindow.add(addUserButton);
 
-            JTextField accountsTextField = new JTextField("Accounts:");
-            accountsTextField.setEditable(false);
-            JFWindow.add(accountsTextField);
-
             ActionListener addUserButtonListener = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -75,6 +71,83 @@ public class bankSoftware {
                     
                     JFWindow.getContentPane().revalidate();
                     JFWindow.getContentPane().repaint();
+                    newUserButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            /*
+                             * debug line mikä napeista valittiin, tätä tietoa voidaan käyttää myöhemmin
+                             * hashmapin päivitykseen > napin nimet tulevat käyttäjien nimistä joten
+                             * toimivat
+                             * avaimina hashmappiin josta haetaan käyttäjän pankkitilin saldo.
+                             */
+                            String selectedOptionString = (String) newUserButton.getName();
+                            System.out.println("user " + selectedOptionString + " clicked");
+
+                            balance = accountDetails.get(selectedOptionString);
+
+                            /* Luodaan uusi ikkuna käyttäjälle joka valittiin. */
+                            JFrame balanceWindow = new JFrame();
+                            balanceWindow.setLayout(new FlowLayout());
+
+                            /*
+                             * tässä on tärkeää että käytetään dispose on close eikä exit on close, sillä
+                             * exit terminoi koko prosessin, dispose vain sulkee ikkunan.
+                             */
+                            balanceWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            balanceWindow.setSize(400, 225);
+                            balanceWindow.setTitle("Banking details for " + selectedOptionString);
+
+                            JLabel label = new JLabel("Account Balance: " + balance);
+                            balanceWindow.getContentPane().add(label);
+                            balanceWindow.setLocationRelativeTo(null); // KREDIITIT STACKOVERFLOW nyt kun tiedän metodin
+                                                                       // olemassaolosta, sen dokumentaatiossa lukee
+                                                                       // että
+                                                                       // jos argumentti on null niin ikkuna ilmestyy
+                                                                       // ruudun
+                                                                       // keskelle.:
+                                                                       // https://stackoverflow.com/questions/9543320/how-to-position-the-form-in-the-center-screen
+
+                            String[] options = {
+                                    " ",
+                                    "addMoney()",
+                                    "withdrawMoney()",
+                                    "transferMoney()",
+                            };
+
+                            JComboBox<String> comboBox = new JComboBox<>(options);
+                            balanceWindow.getContentPane().add(comboBox);
+
+                            /*
+                             * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
+                             * balancewindowiin, sit tajusin että tää on popup...
+                             */
+                            // JOptionPane.showMessageDialog(balanceWindow, comboBox, "Select an option",
+                            // JOptionPane.INFORMATION_MESSAGE);
+
+                            JButton submitButton = new JButton();
+                            submitButton.setPreferredSize(new Dimension(80, 25));
+                            submitButton.setName("submit-button");
+                            submitButton.setText("submit");
+                            balanceWindow.add(submitButton);
+
+                            balanceWindow.setVisible(true);
+
+                            /*
+                             * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
+                             * funktiota joka on valittu combobox elementissä.
+                             */
+                            submitButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    String selectedOption = (String) comboBox.getSelectedItem();
+                                    buttonHandler(selectedOption);
+                                    balance = accountDetails.get(selectedOptionString);
+                                    label.setText("Account Balance: " + balance);
+                                    balanceWindow.revalidate();
+                                    balanceWindow.repaint();
+                                }
+                            });
+                        }
+                    });
                 }
             };
             addUserButton.addActionListener(addUserButtonListener);
@@ -84,7 +157,7 @@ public class bankSoftware {
             deleteUserButton.setText("Delete a user");
             deleteUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
             deleteUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
-            deleteUserButton.setName("addUserButton");
+            deleteUserButton.setName("deleteUserButton");
             JFWindow.add(deleteUserButton);
 
             ActionListener deleteUserButtonListener = new ActionListener() {
@@ -121,6 +194,12 @@ public class bankSoftware {
             };
             deleteUserButton.addActionListener(deleteUserButtonListener);
 
+            JTextField accountsTextField = new JTextField("Accounts:");
+            accountsTextField.setHorizontalAlignment(JTextField.CENTER);
+            accountsTextField.setEditable(false);
+            accountsTextField.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
+            JFWindow.add(accountsTextField);
+
             for (String key : accountDetails.keySet()) {
                 JButton button = new JButton(key);
                 JFWindow.setBackground(new Color(38, 47, 48));
@@ -135,40 +214,25 @@ public class bankSoftware {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        /*
-                         * debug line mikä napeista valittiin, tätä tietoa voidaan käyttää myöhemmin
-                         * hashmapin päivitykseen > napin nimet tulevat käyttäjien nimistä joten
-                         * toimivat
-                         * avaimina hashmappiin josta haetaan käyttäjän pankkitilin saldo.
-                         */
+
                         String selectedOptionString = (String) button.getName();
                         System.out.println("user " + selectedOptionString + " clicked");
 
-                        Double balance = accountDetails.get(selectedOptionString);
+                        balance = accountDetails.get(selectedOptionString);
 
-                        /* Luodaan uusi ikkuna käyttäjälle joka valittiin. */
                         JFrame balanceWindow = new JFrame();
                         balanceWindow.setLayout(new FlowLayout());
 
-                        /*
-                         * tässä on tärkeää että käytetään dispose on close eikä exit on close, sillä
-                         * exit terminoi koko prosessin, dispose vain sulkee ikkunan.
-                         */
                         balanceWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         balanceWindow.setSize(400, 225);
                         balanceWindow.setTitle("Banking details for " + selectedOptionString);
 
                         JLabel label = new JLabel("Account Balance: " + balance);
                         balanceWindow.getContentPane().add(label);
-                        balanceWindow.setLocationRelativeTo(null); // KREDIITIT STACKOVERFLOW nyt kun tiedän metodin
-                                                                   // olemassaolosta, sen dokumentaatiossa lukee että
-                                                                   // jos argumentti on null niin ikkuna ilmestyy ruudun
-                                                                   // keskelle.:
-                                                                   // https://stackoverflow.com/questions/9543320/how-to-position-the-form-in-the-center-screen
+                        balanceWindow.setLocationRelativeTo(null);
 
                         String[] options = {
                                 " ",
-                                "deleteUser()",
                                 "addMoney()",
                                 "withdrawMoney()",
                                 "transferMoney()",
@@ -176,13 +240,6 @@ public class bankSoftware {
 
                         JComboBox<String> comboBox = new JComboBox<>(options);
                         balanceWindow.getContentPane().add(comboBox);
-
-                        /*
-                         * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
-                         * balancewindowiin, sit tajusin että tää on popup...
-                         */
-                        // JOptionPane.showMessageDialog(balanceWindow, comboBox, "Select an option",
-                        // JOptionPane.INFORMATION_MESSAGE);
 
                         JButton submitButton = new JButton();
                         submitButton.setPreferredSize(new Dimension(80, 25));
@@ -192,20 +249,19 @@ public class bankSoftware {
 
                         balanceWindow.setVisible(true);
 
-                        /*
-                         * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
-                         * funktiota joka on valittu combobox elementissä.
-                         */
                         submitButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 String selectedOption = (String) comboBox.getSelectedItem();
                                 buttonHandler(selectedOption);
+                                balanceWindow.revalidate();
                                 balanceWindow.repaint();
                             }
                         });
                     }
                 });
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             System.out.println("exited GUI.");
         }
@@ -213,7 +269,9 @@ public class bankSoftware {
 
     public static void buttonHandler(String selectedOption) {
 
-        if (selectedOption.equals("addMoney()")) {
+        if (selectedOption.equals(" ")) {
+            System.out.println("do nothing.");
+        } else if (selectedOption.equals("addMoney()")) {
             addMoney();
             System.out.println("Calling " + selectedOption);
         } else if (selectedOption.equals("withdrawMoney()")) {
@@ -237,9 +295,9 @@ public class bankSoftware {
                 accountDetails.put(temp[0], Double.parseDouble(temp[1]));
                 linesCheck++;
             }
-            if (accountDetails.size() == 0) {
-                accountDetails.put("bankAdmin", 1000.0);
-            }
+            // if (accountDetails.size() == 0) {
+            // accountDetails.put("bankAdmin", 1000.0);
+            // }
             System.out.println("\nHashmap populated with " + linesCheck + "entries.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -288,6 +346,8 @@ public class bankSoftware {
             if (accountDetails.containsKey(nameToDelete)) {
                 accountDetails.remove(nameToDelete);
                 System.out.println("user " + nameToDelete + " deleted.");
+            } else {
+                System.out.println("DEBUG:\n User not found.");
             }
 
             for (String name : accountDetails.keySet()) {
