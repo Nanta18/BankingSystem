@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.desktop.ScreenSleepEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
