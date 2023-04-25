@@ -38,12 +38,18 @@ public class bankSoftware {
 
             JFWindow.setIconImage(logo.getImage());
 
+            JFWindow.getContentPane().setBackground(new Color(101, 101, 101));
+
             /* Add user nappi */
 
             JButton addUserButton = new JButton();
             addUserButton.setName("addUserButton");
             addUserButton.setText("Add a user");
+            addUserButton.setForeground(new Color(211, 255, 243));
+            JFWindow.setLocationRelativeTo(null);
+            addUserButton.setFocusable(false);
             addUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
+            addUserButton.setBackground(new Color(128, 135, 130));
             JFWindow.add(addUserButton);
 
             ActionListener addUserButtonListener = new ActionListener() {
@@ -54,11 +60,15 @@ public class bankSoftware {
                         addUser(userName);
                     } else {
                         JOptionPane.showMessageDialog(JFWindow, "Invalid user name.");
+                        return;
                     }
                     // Add new button to the GUI..... this took way too much work, idk what i was
                     // thinking jesus christ.... the voices.
                     JButton newUserButton = new JButton(userName);
                     newUserButton.setName(userName);
+                    newUserButton.setFocusable(false);
+                    newUserButton.setBackground(new Color(128, 135, 130));
+                    newUserButton.setForeground(new Color(211, 255, 243));
                     newUserButton.setPreferredSize(new Dimension((int) (JFWindow.getWidth() * 0.8), 50));
                     JFWindow.getContentPane().add(newUserButton);
                     JFWindow.getContentPane().revalidate();
@@ -120,6 +130,9 @@ public class bankSoftware {
                             submitButton.setPreferredSize(new Dimension(80, 25));
                             submitButton.setName("submit-button");
                             submitButton.setText("submit");
+                            submitButton.setBackground(new Color(128, 135, 130));
+                            submitButton.setForeground(new Color(211, 255, 243));
+                            submitButton.setFocusable(false);
                             balanceWindow.add(submitButton);
 
                             balanceWindow.setVisible(true);
@@ -147,6 +160,9 @@ public class bankSoftware {
 
             /* remove user nappi */
             JButton deleteUserButton = new JButton();
+            deleteUserButton.setBackground(new Color(128, 135, 130));
+            deleteUserButton.setForeground(new Color(211, 255, 243));
+            deleteUserButton.setFocusable(false);
             deleteUserButton.setText("Delete a user");
             deleteUserButton.setFont(new Font("Open Sans Bold", Font.BOLD, 14));
             deleteUserButton.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
@@ -188,6 +204,8 @@ public class bankSoftware {
             deleteUserButton.addActionListener(deleteUserButtonListener);
 
             JTextField accountsTextField = new JTextField("Accounts:");
+            accountsTextField.setBackground(new Color(128, 135, 130));
+            accountsTextField.setForeground(new Color(211, 255, 243));
             accountsTextField.setHorizontalAlignment(JTextField.CENTER);
             accountsTextField.setEditable(false);
             accountsTextField.setPreferredSize(new Dimension(JFWindow.getWidth() / 2, 50));
@@ -202,6 +220,8 @@ public class bankSoftware {
                 JFWindow.setVisible(true);
                 button.revalidate();
                 button.repaint();
+                button.setBackground(new Color(128, 135, 130));
+                button.setForeground(new Color(211, 255, 243));
                 JFWindow.revalidate();
                 button.addActionListener(new ActionListener() {
                     @Override
@@ -237,6 +257,8 @@ public class bankSoftware {
                         submitButton.setPreferredSize(new Dimension(80, 25));
                         submitButton.setName("submit-button");
                         submitButton.setText("submit");
+                        submitButton.setBackground(new Color(128, 135, 130));
+                        submitButton.setForeground(new Color(211, 255, 243));
                         balanceWindow.add(submitButton);
 
                         balanceWindow.setVisible(true);

@@ -1,2 +1,0 @@
-Elon Musk,5.0
-Admin,1000.0
