@@ -94,6 +94,8 @@ public class bankSoftware {
                             JFrame balanceWindow = new JFrame();
                             balanceWindow.setLayout(new FlowLayout());
 
+                            
+
                             /*
                              * tässä on tärkeää että käytetään dispose on close eikä exit on close, sillä
                              * exit terminoi koko prosessin, dispose vain sulkee ikkunan.
@@ -122,6 +124,8 @@ public class bankSoftware {
                             JComboBox<String> comboBox = new JComboBox<>(options);
                             balanceWindow.getContentPane().add(comboBox);
 
+
+
                             /*
                              * lol luulin että tätä tarvitaan ja ihmettelin miksei se ankkuroidu
                              * balancewindowiin, sit tajusin että tää on popup...
@@ -133,12 +137,16 @@ public class bankSoftware {
                             submitButton.setPreferredSize(new Dimension(80, 25));
                             submitButton.setName("submit-button");
                             submitButton.setText("submit");
-                            submitButton.setBackground(new Color(128, 135, 130));
                             submitButton.setForeground(new Color(211, 255, 243));
+                            submitButton.setBackground(new Color(128, 135, 130));
                             submitButton.setFocusable(false);
                             balanceWindow.add(submitButton);
+                            balanceWindow.setIconImage(logo.getImage());
 
+                            balanceWindow.setBackground(new Color(101, 101, 101));
                             balanceWindow.setVisible(true);
+
+                     
 
                             /*
                              * ActionListener funktiovalinta komponentille, nappia painettaessa kutsuu
@@ -226,6 +234,7 @@ public class bankSoftware {
                 button.repaint();
                 button.setBackground(new Color(128, 135, 130));
                 button.setForeground(new Color(211, 255, 243));
+                button.setFocusable(false);
                 JFWindow.revalidate();
                 button.addActionListener(new ActionListener() {
                     @Override
@@ -264,8 +273,12 @@ public class bankSoftware {
                         submitButton.setBackground(new Color(128, 135, 130));
                         submitButton.setForeground(new Color(211, 255, 243));
                         balanceWindow.add(submitButton);
-
+                        ImageIcon logo = new ImageIcon("logo.png");
+                        balanceWindow.setBackground(new Color(128, 135, 130));
+                        balanceWindow.setIconImage(logo.getImage());
                         balanceWindow.setVisible(true);
+                        balanceWindow.revalidate();
+                        balanceWindow.repaint();
 
                         submitButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
