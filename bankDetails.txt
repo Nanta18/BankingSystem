@@ -1,2 +1,0 @@
-SQL uhrien rahasto,40.0
-Admin,1050.0
