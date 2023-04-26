@@ -1,4 +1,4 @@
-#School project for java programming course.
+##School project for java programming course.
 
 ## Folder Structure
 
